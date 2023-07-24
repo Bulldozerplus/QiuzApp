@@ -1,7 +1,8 @@
 import './App.css';
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {answerPlayer, fetchState} from './consts'
+import QuestionService from "./QuestionService";
+
 function App() {
 
     const [data, setData] = useState(null)
@@ -14,8 +15,10 @@ function App() {
     async function fetchRandomQuestion() {
         try {
             setState(fetchState.LOADING)
-            const questionData = await axios.get('http://jservice.io//api/random')
-            setData(questionData.data)
+            const questionRandom = await QuestionService.getAll()
+            if (Array.isArray(questionRandom)) {
+                setData(questionRandom)
+            }
             setState(fetchState.SUCCESS)
             setNotice(null)
             setAnswerUser('')
@@ -24,6 +27,7 @@ function App() {
         }
     }
 
+    console.log(data)
     useEffect(() => {
         fetchRandomQuestion()
     }, [])
